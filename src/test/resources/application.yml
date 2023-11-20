@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+#      ddl-auto: create  none으로 설정하면 데이터가 날라가지 않음.
+    properties:
+      hibernate:
+        #show_sql: true
+        format_sql: true
+
+
+logging.level:
+  org.hibernate.SQL: debug
+  # 이 두개는 옵션 아마 운영에서는 꺼야 할듯?
+  org.hibernate.type: trace #스프링 부트 2.x, hibernate5
+  org.hibernate.orm.jdbc.bind: trace #스프링 부트 3.x, hibernate6
