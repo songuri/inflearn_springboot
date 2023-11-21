@@ -41,14 +41,14 @@ public class MemberApiController {
         List<MemberDto> collect = findMembers.stream().map(m -> new MemberDto(m.getName()))
                 .collect(Collectors.toList());
 
-        return new Result(collect, collect.size());
+        return new Result(collect.size(),collect) ;
     }
 
     @Data
     @AllArgsConstructor
     static class Result<T> {
-        private T data;
         private int count; //카운트 추가 하는 방법
+        private T data;
 
     }
 

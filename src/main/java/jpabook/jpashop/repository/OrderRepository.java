@@ -2,13 +2,12 @@ package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderSearch;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
@@ -105,4 +104,35 @@ public class OrderRepository {
 
         return query.getResultList();
     }
+
+    public List<Order> findAllWithMemberDelivery() {
+        List<Order> resultList = em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+
+        return resultList;
+    }
+
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+        // 이것 봤을때 o 가 SELECT 됬는데 OrderSimpleQueryDto 여기에 맵핑 할 수 가 없다.
+        // Order클래스와 OrderSimpleQueryDto 클래는 다르니까?
+/*        List<OrderSimpleQueryDto> resultList = em.createQuery(
+                        "select o from Order o" +
+                                        " join o.member m" +
+                                        " join o.delivery d",
+                        OrderSimpleQueryDto.class)
+                .getResultList();*/
+
+        List<OrderSimpleQueryDto> resultList = em.createQuery(
+                        "select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) from Order o" +
+                                " join o.member m" +
+                                " join o.delivery d",
+                        OrderSimpleQueryDto.class)
+                .getResultList();
+        return resultList;
+    }
+
+
 }
